@@ -2,6 +2,7 @@ package com.github.mvollebregt.lastfm4j.util.parser
 
 import com.github.mvollebregt.lastfm4j.model.Artist
 import spock.lang.Specification
+import com.github.mvollebregt.lastfm4j.model.Album
 
 // This file is part of SpotifyDiscoverer.
 //
@@ -40,9 +41,9 @@ class XmlParserSpec extends Specification {
                             <image size="large">...</image>
                         </artist>"""
         when:
-            def artists = parser.parse(new StringReader(xml));
+            def artist = parser.parse(new StringReader(xml));
         then:
-            assert match(new Artist(name: "Dream Theater"), artists)
+            assert match(new Artist(name: "Dream Theater"), artist)
     }
 
     def "parse two artists should return a list of two Artists"() {
@@ -55,10 +56,17 @@ class XmlParserSpec extends Specification {
             assert match([new Artist(name: "First Artist"), new Artist(name: "Second Artist")], list)
     }
 
-//    def "parse an album should return an album"() {
-//        given:
-//
-//    }
+    def "parse an album should return an album"() {
+        given:
+            def xml = """<album>
+                          <name>Believe</name>
+                          <id>2026126</id>
+                        </album>"""
+        when:
+            def album = parser.parse(new StringReader(xml));
+        then:
+            assert match(new Album(name: "Believe"), album)
+    }
 
     private static match(Collection expectedList, Collection observedList) {
         assert expectedList.size() == observedList.size()

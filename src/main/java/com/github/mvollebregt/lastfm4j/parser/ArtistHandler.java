@@ -15,6 +15,7 @@ package com.github.mvollebregt.lastfm4j.parser;
 // You should have received a copy of the GNU General Public License
 // along with SpotifyDiscoverer.  If not, see <http://www.gnu.org/licenses/>.
 
+import com.github.mvollebregt.lastfm4j.model.Album;
 import com.github.mvollebregt.lastfm4j.model.Artist;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -29,7 +30,7 @@ import java.util.List;
 public class ArtistHandler extends DefaultHandler {
 
     private Object objectTree;
-    private Artist objectInProgress;
+    private Object objectInProgress;
 
     private StringBuilder characterBuffer;
 
@@ -41,6 +42,8 @@ public class ArtistHandler extends DefaultHandler {
     public void startElement(String uri, String name, String qname, Attributes attributes) throws SAXException {
         if ("artist".equals(qname)) {
             objectInProgress = new Artist();
+        } else if ("album".equals(qname)) {
+            objectInProgress = new Album();
         } else if (objectInProgress == null) {
             objectTree = new ArrayList();
         }
@@ -49,9 +52,16 @@ public class ArtistHandler extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String name, String qname) throws SAXException {
-        if ("name".equals(qname)) {
-            objectInProgress.setName(characterBuffer.toString());
-        } else if ("artist".equals(qname)) {
+        if (objectInProgress instanceof Artist) {
+            if ("name".equals(qname)) {
+                ((Artist) objectInProgress).setName(characterBuffer.toString());
+            }
+        } else if (objectInProgress instanceof Album) {
+            if ("name".equals(qname)) {
+                ((Album) objectInProgress).setName(characterBuffer.toString());
+            }
+        }
+        if ("artist".equals(qname) || "album".equals(qname)) {
             if (objectTree != null) {
                 ((List) objectTree).add(objectInProgress);
             } else {
@@ -62,6 +72,6 @@ public class ArtistHandler extends DefaultHandler {
 
     public void characters(char[] ch, int start, int length) throws SAXException {
         if (characterBuffer == null) characterBuffer = new StringBuilder();
-		characterBuffer.append(ch, start, length);
-	}
+        characterBuffer.append(ch, start, length);
+    }
 }
