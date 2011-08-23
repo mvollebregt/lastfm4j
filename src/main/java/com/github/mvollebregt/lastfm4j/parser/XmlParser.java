@@ -35,6 +35,6 @@ public class XmlParser {
 	    xmlReader.setContentHandler(handler);
 	    xmlReader.setErrorHandler(handler);
         xmlReader.parse(new InputSource(inputReader));
-        return handler.getArtist();
+        return handler.getObjectTree();
     }
 }

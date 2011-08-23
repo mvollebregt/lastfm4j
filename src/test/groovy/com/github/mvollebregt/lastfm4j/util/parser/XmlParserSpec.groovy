@@ -1,8 +1,7 @@
 package com.github.mvollebregt.lastfm4j.util.parser
 
-import spock.lang.Specification
-
 import com.github.mvollebregt.lastfm4j.model.Artist
+import spock.lang.Specification
 
 // This file is part of SpotifyDiscoverer.
 //
@@ -24,7 +23,7 @@ import com.github.mvollebregt.lastfm4j.model.Artist
  *
  * @author Michel Vollebregt
  */
-class ArtistHandlerSpec extends Specification {
+class XmlParserSpec extends Specification {
 
     def parser = new com.github.mvollebregt.lastfm4j.parser.XmlParser();
 
@@ -41,9 +40,9 @@ class ArtistHandlerSpec extends Specification {
                             <image size="large">...</image>
                         </artist>"""
         when:
-            def artist = parser.parse(new StringReader(xml));
+            def artists = parser.parse(new StringReader(xml));
         then:
-            assert match([new Artist(name: "Dream Theater")], artist)
+            assert match(new Artist(name: "Dream Theater"), artists)
     }
 
     def "parse two artists should return a list of two Artists"() {
@@ -56,15 +55,20 @@ class ArtistHandlerSpec extends Specification {
             assert match([new Artist(name: "First Artist"), new Artist(name: "Second Artist")], list)
     }
 
+//    def "parse an album should return an album"() {
+//        given:
+//
+//    }
+
     private static match(Collection expectedList, Collection observedList) {
         assert expectedList.size() == observedList.size()
         for (int i = 0; i < expectedList.size(); i++) {
-            assert matchItem(expectedList[i], observedList[i])
+            assert match(expectedList[i], observedList[i])
         }
         return true
     }
 
-    private static matchItem(expected, observed) {
+    private static match(expected, observed) {
         assert expected.class == observed.class
         expected.properties.each {property, value ->
             if (property != null) {

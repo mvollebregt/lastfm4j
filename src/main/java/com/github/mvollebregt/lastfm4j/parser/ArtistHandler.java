@@ -28,24 +28,21 @@ import java.util.List;
  */
 public class ArtistHandler extends DefaultHandler {
 
-    private List artists;
+    private Object objectTree;
     private Artist objectInProgress;
 
     private StringBuilder characterBuffer;
 
-    public List getArtist() {
-        return artists;
-    }
-
-    @Override
-    public void startDocument() throws SAXException {
-        artists = new ArrayList();
+    public Object getObjectTree() {
+        return objectTree;
     }
 
     @Override
     public void startElement(String uri, String name, String qname, Attributes attributes) throws SAXException {
         if ("artist".equals(qname)) {
             objectInProgress = new Artist();
+        } else if (objectInProgress == null) {
+            objectTree = new ArrayList();
         }
         characterBuffer = null;
     }
@@ -55,7 +52,11 @@ public class ArtistHandler extends DefaultHandler {
         if ("name".equals(qname)) {
             objectInProgress.setName(characterBuffer.toString());
         } else if ("artist".equals(qname)) {
-            artists.add(objectInProgress);
+            if (objectTree != null) {
+                ((List) objectTree).add(objectInProgress);
+            } else {
+                objectTree = objectInProgress;
+            }
         }
     }
 
