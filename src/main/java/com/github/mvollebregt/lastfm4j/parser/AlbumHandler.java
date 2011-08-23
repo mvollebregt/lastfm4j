@@ -15,25 +15,36 @@ package com.github.mvollebregt.lastfm4j.parser;
 // You should have received a copy of the GNU General Public License
 // along with SpotifyDiscoverer.  If not, see <http://www.gnu.org/licenses/>.
 
-import org.xml.sax.InputSource;
+import com.github.mvollebregt.lastfm4j.model.Album;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
-
-import java.io.IOException;
-import java.io.Reader;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Michel Vollebregt
  */
-public class XmlParser {
+public class AlbumHandler extends DefaultHandler implements ObjectBuilder {
 
-    public Object parse(Reader inputReader) throws SAXException, IOException {
-        XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-        RootHandler handler = new RootHandler();
-	    xmlReader.setContentHandler(handler);
-	    xmlReader.setErrorHandler(handler);
-        xmlReader.parse(new InputSource(inputReader));
-        return handler.getObjectTree();
+    private Album album = new Album();
+
+    @Override
+    public String getElementName() {
+        return "album";
+    }
+
+    @Override
+    public Album getObject() {
+        return album;
+    }
+
+    @Override
+    public void setAttribute(String qname, String value) throws SAXException {
+        if ("name".equals(qname)) {
+            album.setName(value);
+        }
+    }
+
+    @Override
+    public void putObject(String qname, Object object) {
+        throw new UnsupportedOperationException();
     }
 }

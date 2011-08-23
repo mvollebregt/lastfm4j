@@ -1,8 +1,8 @@
 package com.github.mvollebregt.lastfm4j.util.parser
 
+import com.github.mvollebregt.lastfm4j.model.Album
 import com.github.mvollebregt.lastfm4j.model.Artist
 import spock.lang.Specification
-import com.github.mvollebregt.lastfm4j.model.Album
 
 // This file is part of SpotifyDiscoverer.
 //
@@ -68,6 +68,21 @@ class XmlParserSpec extends Specification {
             assert match(new Album(name: "Believe"), album)
     }
 
+//    def "nested elements should an object tree"() {
+//        given:
+//            def xml = """<album>
+//                          <name>Believe</name>
+//                          <artist>Cher</artist>
+//                          <id>2026126</id>
+//                        </album>"""
+//        when:
+//            println "ja?"
+//            def album = parser.parse(new StringReader(xml));
+//        then:
+//            println "album: ${album}"
+//            assert match(new Album(name: "Believe", artist: new Artist(name:"Cher")), album)
+//    }
+
     private static match(Collection expectedList, Collection observedList) {
         assert expectedList.size() == observedList.size()
         for (int i = 0; i < expectedList.size(); i++) {
@@ -76,13 +91,26 @@ class XmlParserSpec extends Specification {
         return true
     }
 
+    private static match(Artist expected, Artist observed) {
+        matchProperties(expected, observed)
+    }
+
+    private static match(Album expected, Album observed) {
+        matchProperties(expected, observed)
+    }
+
     private static match(expected, observed) {
+        assert expected == observed
+        return true
+    }
+
+    private static matchProperties(expected, observed) {
         assert expected.class == observed.class
         expected.properties.each {property, value ->
-            if (property != null) {
-                assert observed[property] == value
-            }
+            assert match(value, observed[property])
         }
         return true
     }
+
+
 }

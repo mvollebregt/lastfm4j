@@ -17,61 +17,39 @@ package com.github.mvollebregt.lastfm4j.parser;
 
 import com.github.mvollebregt.lastfm4j.model.Album;
 import com.github.mvollebregt.lastfm4j.model.Artist;
-import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Michel Vollebregt
  */
-public class ArtistHandler extends DefaultHandler {
+public class ArtistHandler extends DefaultHandler implements ObjectBuilder {
 
-    private Object objectTree;
-    private Object objectInProgress;
+    private Artist artist = new Artist();
 
-    private StringBuilder characterBuffer;
-
-    public Object getObjectTree() {
-        return objectTree;
+    @Override
+    public String getElementName() {
+        return "artist";
     }
 
     @Override
-    public void startElement(String uri, String name, String qname, Attributes attributes) throws SAXException {
-        if ("artist".equals(qname)) {
-            objectInProgress = new Artist();
-        } else if ("album".equals(qname)) {
-            objectInProgress = new Album();
-        } else if (objectInProgress == null) {
-            objectTree = new ArrayList();
-        }
-        characterBuffer = null;
+    public Artist getObject() {
+        return artist;
     }
 
     @Override
-    public void endElement(String uri, String name, String qname) throws SAXException {
-        if (objectInProgress instanceof Artist) {
-            if ("name".equals(qname)) {
-                ((Artist) objectInProgress).setName(characterBuffer.toString());
-            }
-        } else if (objectInProgress instanceof Album) {
-            if ("name".equals(qname)) {
-                ((Album) objectInProgress).setName(characterBuffer.toString());
-            }
-        }
-        if ("artist".equals(qname) || "album".equals(qname)) {
-            if (objectTree != null) {
-                ((List) objectTree).add(objectInProgress);
-            } else {
-                objectTree = objectInProgress;
-            }
+    public void setAttribute(String qname, String value) throws SAXException {
+        if ("name".equals(qname)) {
+            artist.setName(value);
         }
     }
 
-    public void characters(char[] ch, int start, int length) throws SAXException {
-        if (characterBuffer == null) characterBuffer = new StringBuilder();
-        characterBuffer.append(ch, start, length);
+    @Override
+    public void putObject(String qname, Object object) {
+        throw new UnsupportedOperationException();
     }
+
 }
