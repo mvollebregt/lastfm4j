@@ -1,4 +1,4 @@
-package com.github.mvollebregt.lastfm4j.util.parser
+package com.github.mvollebregt.lastfm4j.parser
 
 import com.github.mvollebregt.lastfm4j.model.Album
 import com.github.mvollebregt.lastfm4j.model.Artist
