@@ -1,4 +1,4 @@
-package com.github.mvollebregt.lastfm4j.parser;
+package com.github.mvollebregt.lastfm4j;
 
 // This file is part of SpotifyDiscoverer.
 //
@@ -15,27 +15,15 @@ package com.github.mvollebregt.lastfm4j.parser;
 // You should have received a copy of the GNU General Public License
 // along with SpotifyDiscoverer.  If not, see <http://www.gnu.org/licenses/>.
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
 /**
  * @author Michel Vollebregt
  */
-public class LastFMParser {
+public interface Period {
 
-    public <T> T parse(InputStream inputStream) throws SAXException, IOException {
-        XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-        LastFMHandler<T> handler = new LastFMHandler<T>();
-	    xmlReader.setContentHandler(handler);
-	    xmlReader.setErrorHandler(handler);
-        xmlReader.parse(new InputSource(inputStream));
-        return handler.getObjectTree();
-    }
+    static String OVERALL = "overall";
+    static String _7DAY = "7day";
+    static String _3MONTH = "3month";
+    static String _6MONTH = "6month";
+    static String _12MONTH = "12month";
+
 }

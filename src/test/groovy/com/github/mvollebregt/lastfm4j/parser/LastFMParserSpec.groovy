@@ -41,7 +41,7 @@ class LastFMParserSpec extends Specification {
                             <image size="large">...</image>
                         </artist>"""
         when:
-            def artist = parser.parse(new StringReader(xml));
+            def artist = parser.parse(stream(xml));
         then:
             assert match(new Artist(name: "Dream Theater"), artist)
     }
@@ -51,7 +51,7 @@ class LastFMParserSpec extends Specification {
             def xml = """<root><artist><name>First Artist</name></artist>
                      <artist><name>Second Artist</name></artist></root>"""
         when:
-            def list = parser.parse(new StringReader(xml));
+            def list = parser.parse(stream(xml));
         then:
             assert match([new Artist(name: "First Artist"), new Artist(name: "Second Artist")], list)
     }
@@ -63,7 +63,7 @@ class LastFMParserSpec extends Specification {
                           <id>2026126</id>
                         </album>"""
         when:
-            def album = parser.parse(new StringReader(xml));
+            def album = parser.parse(stream(xml));
         then:
             assert match(new Album(name: "Believe"), album)
     }
@@ -76,7 +76,7 @@ class LastFMParserSpec extends Specification {
                           <id>2026126</id>
                         </album>"""
         when:
-            def album = parser.parse(new StringReader(xml));
+            def album = parser.parse(stream(xml));
         then:
             assert match(new Album(name: "Believe", artist: new Artist(name:"Cher")), album)
     }
@@ -108,6 +108,10 @@ class LastFMParserSpec extends Specification {
             assert match(value, observed[property])
         }
         return true
+    }
+
+    private static stream(text) {
+        new ByteArrayInputStream(text.getBytes("UTF-8"))
     }
 
 
