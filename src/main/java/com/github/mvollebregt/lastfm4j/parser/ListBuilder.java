@@ -15,15 +15,13 @@ package com.github.mvollebregt.lastfm4j.parser;
 // You should have received a copy of the GNU General Public License
 // along with SpotifyDiscoverer.  If not, see <http://www.gnu.org/licenses/>.
 
-import org.xml.sax.SAXException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Michel Vollebregt
  */
-public class ListBuilder implements ObjectBuilder {
+public class ListBuilder implements ObjectBuilder<List> {
 
     private List list = new ArrayList();
     private String elementName;
@@ -44,7 +42,7 @@ public class ListBuilder implements ObjectBuilder {
 
     @Override
     public void setProperty(String qname, String value) {
-         throw new UnsupportedOperationException();
+        // not supported
     }
 
     @Override
@@ -54,6 +52,6 @@ public class ListBuilder implements ObjectBuilder {
 
     @Override
     public void setSingleProperty(String value) {
-        throw new UnsupportedOperationException();
+        // not supported
     }
 }

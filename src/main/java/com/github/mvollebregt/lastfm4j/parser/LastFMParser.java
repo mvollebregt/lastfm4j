@@ -28,9 +28,9 @@ import java.io.Reader;
  */
 public class LastFMParser {
 
-    public Object parse(Reader inputReader) throws SAXException, IOException {
+    public <T> T parse(Reader inputReader) throws SAXException, IOException {
         XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-        LastFMHandler handler = new LastFMHandler();
+        LastFMHandler<T> handler = new LastFMHandler<T>();
 	    xmlReader.setContentHandler(handler);
 	    xmlReader.setErrorHandler(handler);
         xmlReader.parse(new InputSource(inputReader));

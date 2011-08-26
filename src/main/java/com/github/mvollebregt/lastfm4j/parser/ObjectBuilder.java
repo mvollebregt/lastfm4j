@@ -15,16 +15,14 @@ package com.github.mvollebregt.lastfm4j.parser;
 // You should have received a copy of the GNU General Public License
 // along with SpotifyDiscoverer.  If not, see <http://www.gnu.org/licenses/>.
 
-import org.xml.sax.SAXException;
-
 /**
  * @author Michel Vollebregt
  */
-public interface ObjectBuilder {
+public interface ObjectBuilder<T> {
 
     String getElementName();
 
-    Object getObject();
+    T getObject();
 
     void setProperty(String qname, String value);
 

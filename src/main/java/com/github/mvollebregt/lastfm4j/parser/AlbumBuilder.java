@@ -17,13 +17,12 @@ package com.github.mvollebregt.lastfm4j.parser;
 
 import com.github.mvollebregt.lastfm4j.model.Album;
 import com.github.mvollebregt.lastfm4j.model.Artist;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Michel Vollebregt
  */
-public class AlbumBuilder extends DefaultHandler implements ObjectBuilder {
+public class AlbumBuilder extends DefaultHandler implements ObjectBuilder<Album> {
 
     private Album album = new Album();
 

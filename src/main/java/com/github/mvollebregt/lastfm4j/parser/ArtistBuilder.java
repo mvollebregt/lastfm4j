@@ -15,18 +15,13 @@ package com.github.mvollebregt.lastfm4j.parser;
 // You should have received a copy of the GNU General Public License
 // along with SpotifyDiscoverer.  If not, see <http://www.gnu.org/licenses/>.
 
-import com.github.mvollebregt.lastfm4j.model.Album;
 import com.github.mvollebregt.lastfm4j.model.Artist;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import java.util.List;
 
 /**
  * @author Michel Vollebregt
  */
-public class ArtistBuilder extends DefaultHandler implements ObjectBuilder {
+public class ArtistBuilder extends DefaultHandler implements ObjectBuilder<Artist> {
 
     private Artist artist = new Artist();
 
@@ -49,7 +44,7 @@ public class ArtistBuilder extends DefaultHandler implements ObjectBuilder {
 
     @Override
     public void addChild(String qname, Object object) {
-        throw new UnsupportedOperationException();
+        // not supported yet
     }
 
     @Override

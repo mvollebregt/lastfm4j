@@ -24,14 +24,14 @@ import java.util.Stack;
 /**
  * @author Michel Vollebregt
  */
-public class LastFMHandler extends DefaultHandler {
+public class LastFMHandler<T> extends DefaultHandler {
 
-    private Object objectTree;
+    private T objectTree;
     private Stack<ObjectBuilder> objectBuilderStack = new Stack<ObjectBuilder>();
     private StringBuilder characterBuffer;
     private boolean currentElementHasChildren;
 
-    public Object getObjectTree() {
+    public T getObjectTree() {
         return objectTree;
     }
 
@@ -57,7 +57,7 @@ public class LastFMHandler extends DefaultHandler {
             if (!objectBuilderStack.empty()) {
                 objectBuilderStack.peek().addChild(qname, result);
             } else {
-                objectTree = result;
+                objectTree = (T) result;
             }
         } else {
             currentBuilder.setProperty(qname, characterBuffer.toString());
