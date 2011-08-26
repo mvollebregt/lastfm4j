@@ -16,6 +16,7 @@ package com.github.mvollebregt.lastfm4j.parser;
 // along with SpotifyDiscoverer.  If not, see <http://www.gnu.org/licenses/>.
 
 import com.github.mvollebregt.lastfm4j.model.Album;
+import com.github.mvollebregt.lastfm4j.model.Artist;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -45,6 +46,13 @@ public class AlbumHandler extends DefaultHandler implements ObjectBuilder {
 
     @Override
     public void putObject(String qname, Object object) {
-        throw new UnsupportedOperationException();
+        if ("artist".equals(qname)) {
+            album.setArtist((Artist) object);
+        }
+    }
+
+    @Override
+    public void setDefaultAttribute(String value) {
+        album.setName(value);
     }
 }

@@ -52,4 +52,9 @@ public class ArtistHandler extends DefaultHandler implements ObjectBuilder {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void setDefaultAttribute(String value) {
+        artist.setName(value);
+    }
+
 }

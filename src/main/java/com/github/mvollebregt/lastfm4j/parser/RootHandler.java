@@ -32,6 +32,7 @@ public class RootHandler extends DefaultHandler {
     private Stack<ObjectBuilder> handlerStack = new Stack<ObjectBuilder>();
 
     private StringBuilder characterBuffer;
+    private boolean leafNode;
 
     public Object getObjectTree() {
         return objectTree;
@@ -41,13 +42,13 @@ public class RootHandler extends DefaultHandler {
     public void startElement(String uri, String name, String qname, Attributes attributes) throws SAXException {
         if ("artist".equals(qname)) {
             handlerStack.push(new ArtistHandler());
-            //System.out.println("<artist>");
+            leafNode = true;
         } else if ("album".equals(qname)) {
             handlerStack.push(new AlbumHandler());
-            //System.out.println("<album>");
+            leafNode = true;
         } else if (handlerStack.empty()) {
             handlerStack.push(new ListHandler(qname));
-            //System.out.println("<list>");
+            leafNode = true;
         }
         characterBuffer = null;
     }
@@ -55,7 +56,9 @@ public class RootHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String name, String qname) throws SAXException {
         ObjectBuilder currentHandler = handlerStack.peek();
+        String buffer = characterBuffer.toString();
         if (currentHandler.getElementName().equals(qname)) {
+            if (leafNode) currentHandler.setDefaultAttribute(buffer);
             Object result = currentHandler.getObject();
             handlerStack.pop();
             //System.out.printf("</%s>\n", qname);
@@ -65,8 +68,8 @@ public class RootHandler extends DefaultHandler {
                 objectTree = result;
             }
         } else {
-            //System.out.printf("   %s=%s\n", qname, characterBuffer.toString());
-            currentHandler.setAttribute(qname, characterBuffer.toString());
+            currentHandler.setAttribute(qname, buffer);
+            leafNode = false;
         }
     }
 

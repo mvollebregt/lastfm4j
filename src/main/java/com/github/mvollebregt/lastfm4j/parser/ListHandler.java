@@ -51,4 +51,9 @@ public class ListHandler implements ObjectBuilder {
     public void putObject(String qname, Object object) {
         list.add(object);
     }
+
+    @Override
+    public void setDefaultAttribute(String value) {
+        throw new UnsupportedOperationException();
+    }
 }
