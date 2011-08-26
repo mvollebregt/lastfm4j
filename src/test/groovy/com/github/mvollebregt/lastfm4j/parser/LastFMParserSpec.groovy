@@ -81,6 +81,18 @@ class LastFMParserSpec extends Specification {
             assert match(new Album(name: "Believe", artist: new Artist(name:"Cher")), album)
     }
 
+    def "parse a null value should not throw exception"() {
+
+        given:
+            def xml = """<artist>
+                            <mbid></mbid>
+                         </artist>"""
+        when:
+            def artist = parser.parse(stream(xml));
+        then:
+            notThrown(NullPointerException)
+    }
+
     private static match(Collection expectedList, Collection observedList) {
         assert expectedList.size() == observedList.size()
         for (int i = 0; i < expectedList.size(); i++) {

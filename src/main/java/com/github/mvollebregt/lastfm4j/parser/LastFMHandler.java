@@ -44,12 +44,13 @@ public class LastFMHandler<T> extends DefaultHandler {
         } else if (objectBuilderStack.empty()) {
             pushOnStack(new ListBuilder(qname));
         }
-        characterBuffer = null;
+        characterBuffer = new StringBuilder();
     }
 
     @Override
     public void endElement(String uri, String name, String qname) throws SAXException {
         ObjectBuilder currentBuilder = objectBuilderStack.peek();
+        if (characterBuffer != null)
         if (currentBuilder.getElementName().equals(qname)) {
             if (!currentElementHasChildren) currentBuilder.setSingleProperty(characterBuffer.toString());
             Object result = currentBuilder.getObject();
@@ -66,7 +67,6 @@ public class LastFMHandler<T> extends DefaultHandler {
     }
 
     public void characters(char[] ch, int start, int length) throws SAXException {
-        if (characterBuffer == null) characterBuffer = new StringBuilder();
         characterBuffer.append(ch, start, length);
     }
 
