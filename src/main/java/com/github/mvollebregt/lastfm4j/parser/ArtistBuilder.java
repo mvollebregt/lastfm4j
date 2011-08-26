@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author Michel Vollebregt
  */
-public class ArtistHandler extends DefaultHandler implements ObjectBuilder {
+public class ArtistBuilder extends DefaultHandler implements ObjectBuilder {
 
     private Artist artist = new Artist();
 
@@ -41,19 +41,19 @@ public class ArtistHandler extends DefaultHandler implements ObjectBuilder {
     }
 
     @Override
-    public void setAttribute(String qname, String value) throws SAXException {
+    public void setProperty(String qname, String value) {
         if ("name".equals(qname)) {
             artist.setName(value);
         }
     }
 
     @Override
-    public void putObject(String qname, Object object) {
+    public void addChild(String qname, Object object) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setDefaultAttribute(String value) {
+    public void setSingleProperty(String value) {
         artist.setName(value);
     }
 

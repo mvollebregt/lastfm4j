@@ -26,9 +26,9 @@ public interface ObjectBuilder {
 
     Object getObject();
 
-    void setAttribute(String qname, String value) throws SAXException;
+    void setProperty(String qname, String value);
 
-    void putObject(String qname, Object object);
+    void addChild(String qname, Object object);
 
-    void setDefaultAttribute(String value);
+    void setSingleProperty(String value);
 }

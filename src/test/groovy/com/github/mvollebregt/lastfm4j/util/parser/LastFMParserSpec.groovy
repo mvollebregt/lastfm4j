@@ -24,9 +24,9 @@ import spock.lang.Specification
  *
  * @author Michel Vollebregt
  */
-class XmlParserSpec extends Specification {
+class LastFMParserSpec extends Specification {
 
-    def parser = new com.github.mvollebregt.lastfm4j.parser.XmlParser();
+    def parser = new com.github.mvollebregt.lastfm4j.parser.LastFMParser();
 
     def "parse one artist should return one Artist"() {
         given:

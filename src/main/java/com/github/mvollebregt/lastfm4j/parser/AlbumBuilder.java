@@ -23,7 +23,7 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * @author Michel Vollebregt
  */
-public class AlbumHandler extends DefaultHandler implements ObjectBuilder {
+public class AlbumBuilder extends DefaultHandler implements ObjectBuilder {
 
     private Album album = new Album();
 
@@ -38,21 +38,21 @@ public class AlbumHandler extends DefaultHandler implements ObjectBuilder {
     }
 
     @Override
-    public void setAttribute(String qname, String value) throws SAXException {
+    public void setProperty(String qname, String value) {
         if ("name".equals(qname)) {
             album.setName(value);
         }
     }
 
     @Override
-    public void putObject(String qname, Object object) {
+    public void addChild(String qname, Object object) {
         if ("artist".equals(qname)) {
             album.setArtist((Artist) object);
         }
     }
 
     @Override
-    public void setDefaultAttribute(String value) {
+    public void setSingleProperty(String value) {
         album.setName(value);
     }
 }

@@ -19,20 +19,17 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 /**
  * @author Michel Vollebregt
  */
-public class RootHandler extends DefaultHandler {
+public class LastFMHandler extends DefaultHandler {
 
     private Object objectTree;
-    private Stack<ObjectBuilder> handlerStack = new Stack<ObjectBuilder>();
-
+    private Stack<ObjectBuilder> objectBuilderStack = new Stack<ObjectBuilder>();
     private StringBuilder characterBuffer;
-    private boolean leafNode;
+    private boolean currentElementHasChildren;
 
     public Object getObjectTree() {
         return objectTree;
@@ -41,40 +38,40 @@ public class RootHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String name, String qname, Attributes attributes) throws SAXException {
         if ("artist".equals(qname)) {
-            handlerStack.push(new ArtistHandler());
-            leafNode = true;
+            pushOnStack(new ArtistBuilder());
         } else if ("album".equals(qname)) {
-            handlerStack.push(new AlbumHandler());
-            leafNode = true;
-        } else if (handlerStack.empty()) {
-            handlerStack.push(new ListHandler(qname));
-            leafNode = true;
+            pushOnStack(new AlbumBuilder());
+        } else if (objectBuilderStack.empty()) {
+            pushOnStack(new ListBuilder(qname));
         }
         characterBuffer = null;
     }
 
     @Override
     public void endElement(String uri, String name, String qname) throws SAXException {
-        ObjectBuilder currentHandler = handlerStack.peek();
-        String buffer = characterBuffer.toString();
-        if (currentHandler.getElementName().equals(qname)) {
-            if (leafNode) currentHandler.setDefaultAttribute(buffer);
-            Object result = currentHandler.getObject();
-            handlerStack.pop();
-            //System.out.printf("</%s>\n", qname);
-            if (!handlerStack.empty()) {
-                handlerStack.peek().putObject(qname, result);
+        ObjectBuilder currentBuilder = objectBuilderStack.peek();
+        if (currentBuilder.getElementName().equals(qname)) {
+            if (!currentElementHasChildren) currentBuilder.setSingleProperty(characterBuffer.toString());
+            Object result = currentBuilder.getObject();
+            objectBuilderStack.pop();
+            if (!objectBuilderStack.empty()) {
+                objectBuilderStack.peek().addChild(qname, result);
             } else {
                 objectTree = result;
             }
         } else {
-            currentHandler.setAttribute(qname, buffer);
-            leafNode = false;
+            currentBuilder.setProperty(qname, characterBuffer.toString());
+            currentElementHasChildren = true;
         }
     }
 
     public void characters(char[] ch, int start, int length) throws SAXException {
         if (characterBuffer == null) characterBuffer = new StringBuilder();
         characterBuffer.append(ch, start, length);
+    }
+
+    private void pushOnStack(ObjectBuilder handler) {
+        objectBuilderStack.push(handler);
+        currentElementHasChildren = false;
     }
 }
