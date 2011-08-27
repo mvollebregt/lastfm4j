@@ -15,8 +15,8 @@ package com.github.mvollebregt.lastfm4j;
 // You should have received a copy of the GNU General Public License
 // along with SpotifyDiscoverer.  If not, see <http://www.gnu.org/licenses/>.
 
-import com.github.mvollebregt.lastfm4j.model.Artist;
-import com.github.mvollebregt.lastfm4j.parser.LastFMParser;
+import com.github.mvollebregt.musicmetamodel.Artist;
+import com.github.mvollebregt.musicmetamodel.parser.MusicMetaParser;
 import com.github.mvollebregt.lastfm4j.util.FileApiKeyResolver;
 import com.github.mvollebregt.lastfm4j.util.UrlBuilder;
 import org.xml.sax.SAXException;
@@ -32,11 +32,11 @@ import java.util.List;
  */
 public class UserService {
 
-    private LastFMParser parser = new LastFMParser();
-    private UrlBuilder urlBuilder = new UrlBuilder();
+    private MusicMetaParser parser;
+    private UrlBuilder urlBuilder;
 
     public UserService() {
-        parser = new LastFMParser();
+        parser = new MusicMetaParser();
         urlBuilder = new UrlBuilder();
         urlBuilder.setApiKeyResolver(new FileApiKeyResolver());
     }
@@ -46,13 +46,13 @@ public class UserService {
         parameters.put("user", user);
         parameters.put("period", period);
         URL url = urlBuilder.buildUrl("user.gettopartists", parameters);
-        System.out.println(url.toString());
         InputStream stream = url.openStream();
         return parser.parse(stream);
     }
 
     public static void main(String[] args) throws Exception {
         UserService service = new UserService();
-        System.out.println(service.getTopArtists("kaleman", Period._3MONTH));
+        List<Artist> artists = service.getTopArtists("kaleman", Period._3MONTH);
+        System.out.println(artists);
     }
 }
